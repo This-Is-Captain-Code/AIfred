@@ -20,19 +20,19 @@ const ApiServices = async () => {
     
     try {
         // Get token balances
-        const balances = await tokenBalances.getTokenBalances("eth-mainnet", walletAddress);
+        const balances = await tokenBalances.get("eth-mainnet", walletAddress);
         console.log("Token Balances:", balances);
 
         // Get NFT holdings
-        const nfts = await nftHoldings.getNFTHoldings("eth-mainnet", walletAddress);
+        const nfts = await nftHoldings.get("eth-mainnet", walletAddress);
         console.log("NFT Holdings:", nfts);
 
         // Get transaction history
-        const txHistory = await transactions.getTransactionHistory("eth-mainnet", walletAddress);
+        const txHistory = await transactions.get("eth-mainnet", walletAddress);
         console.log("Transaction History:", txHistory);
 
         // Get historical prices for ETH
-        const priceHistory = await historicalPrices.getHistoricalPrices("eth-mainnet", "ETH", "24h");
+        const priceHistory = await historicalPrices.get("eth-mainnet", "ETH", "24h");
         console.log("ETH Price History (24h):", priceHistory);
 
     } catch (error) {
