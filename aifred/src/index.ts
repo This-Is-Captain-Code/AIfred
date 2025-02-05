@@ -1,5 +1,12 @@
 
-import { Agent, ZeeWorkflow } from "@covalenthq/ai-agent-sdk";
+import { 
+  Agent, 
+  ZeeWorkflow,
+  TokenBalancesTool,
+  NFTBalancesTool,
+  TransactionsTool,
+  HistoricalTokenPriceTool 
+} from "@covalenthq/ai-agent-sdk";
 import "dotenv/config";
 
 const agent1 = new Agent({
