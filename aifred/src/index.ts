@@ -1,28 +1,26 @@
+
 import { Agent, ZeeWorkflow } from "@covalenthq/ai-agent-sdk";
 import "dotenv/config";
 
 const agent1 = new Agent({
-    name: "Agent1",
+    name: "blockchain-researcher",
     model: {
         provider: "OPEN_AI",
         name: "gpt-4o-mini",
     },
-    description: "A helpful AI assistant that can engage in conversation.",
-});
-
-const agent2 = new Agent({
-    name: "Agent2",
-    model: {
-        provider: "OPEN_AI",
-        name: "gpt-4o-mini",
+    description: "A blockchain researcher analyzing wallet activities.",
+    tools: {
+        tokenBalances: new TokenBalancesTool(process.env.GOLDRUSH_API_KEY),
+        nftBalances: new NFTBalancesTool(process.env.GOLDRUSH_API_KEY),
+        transactions: new TransactionsTool(process.env.GOLDRUSH_API_KEY),
+        historicalPrices: new HistoricalTokenPriceTool(process.env.GOLDRUSH_API_KEY)
     },
-    description: "A helpful AI assistant that can engage in conversation.",
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow of agents that do stuff together",
-    output: "Just bunch of stuff",
-    agents: { agent1, agent2 },
+    description: "A workflow that analyzes blockchain data",
+    output: "Blockchain analysis results",
+    agents: { agent1 },
 });
 
 (async function main() {
