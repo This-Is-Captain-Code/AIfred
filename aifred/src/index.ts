@@ -37,12 +37,12 @@ const client = new GoldRushClient(process.env.GOLDRUSH_API_KEY || "");
 
 async function analyzeWallet(
     walletAddress: string,
-    chain: string = "eth-mainnet",
+    chain: Chain = Chain.ETH_MAINNET,
 ) {
     try {
         const balances =
             await client.BalanceService.getTokenBalancesForWalletAddress(
-                chain,
+                Chain[chain],
                 walletAddress,
             );
         if (!balances.error) {
