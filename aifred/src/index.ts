@@ -23,7 +23,7 @@ const ApiServices = async () => {
         name: "blockchain researcher",
         model: {
             provider: "OPEN_AI",
-            name: "gpt-4-mini",
+            name: "gpt-4",
         },
         description: "You are a blockchain researcher analyzing wallet activities.",
         tools: {
@@ -35,19 +35,19 @@ const ApiServices = async () => {
     
     try {
         // Fetch token balances
-        const balances = await tokenBalances.get("eth-mainnet", walletAddress);
+        const balances = await tokenBalances.getTokenBalances("eth-mainnet", walletAddress);
         console.log("Token Balances:", balances);
 
         // Fetch NFT holdings
-        const nfts = await nftHoldings.get("eth-mainnet", walletAddress);
+        const nfts = await nftHoldings.getNFTBalances("eth-mainnet", walletAddress);
         console.log("NFT Holdings:", nfts);
 
         // Fetch transaction history
-        const txHistory = await transactions.get("eth-mainnet", walletAddress);
+        const txHistory = await transactions.getTransactions("eth-mainnet", walletAddress);
         console.log("Transaction History:", txHistory);
 
         // Fetch ETH price history (24h)
-        const priceHistory = await historicalPrices.get("eth-mainnet", "ETH", "24h");
+        const priceHistory = await historicalPrices.getHistoricalPrices("eth-mainnet", "ETH", "24h");
         console.log("ETH Price History (24h):", priceHistory);
 
     } catch (error) {
