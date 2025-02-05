@@ -1,10 +1,10 @@
-
 import {
     TokenBalancesTool,
     NFTBalancesTool,
     TransactionsTool,
     HistoricalTokenPriceTool,
     Agent,
+    ZeeWorkflow
 } from "@covalenthq/ai-agent-sdk";
 import "dotenv/config";
 
@@ -56,3 +56,42 @@ ApiServices().catch(error => {
     console.error("Unhandled Error:", error);
     process.exit(1);
 });
+
+
+// Create the first agent
+const agent1 = new Agent({
+    name: "Agent1",
+    model: {
+        provider: "OPEN_AI",
+        name: "gpt-4",
+    },
+    description: "A helpful AI assistant that can engage in conversation.",
+});
+
+// Create the second agent
+const agent2 = new Agent({
+    name: "Agent2",
+    model: {
+        provider: "OPEN_AI",
+        name: "gpt-4",
+    },
+    description: "Another helpful AI assistant for collaboration.",
+});
+
+// Create the ZEE workflow
+const zee = new ZeeWorkflow({
+    description: "A workflow of agents that do stuff together",
+    output: "Just bunch of stuff",
+    agents: { agent1, agent2 },
+});
+
+// Run the workflow
+(async function main() {
+    try {
+        const result = await ZeeWorkflow.run(zee);
+        console.log("Workflow Result:", result);
+    } catch (error) {
+        console.error("Error running workflow:", error);
+        process.exit(1);
+    }
+})();
