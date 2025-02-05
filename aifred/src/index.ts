@@ -1,6 +1,5 @@
 
-import { GoldRushClient } from "@covalenthq/client-sdk";
-import { 
+import {
     TokenBalancesTool,
     NFTBalancesTool,
     TransactionsTool,
@@ -11,6 +10,15 @@ import "dotenv/config";
 
 const ApiServices = async () => {
     const apiKey = process.env.GOLDRUSH_API_KEY || "";
+    const walletAddress = process.env.WALLET_ADDRESS || "";
+    
+    // Initialize tools
+    const tokenBalances = new TokenBalancesTool(apiKey);
+    const nftHoldings = new NFTBalancesTool(apiKey);
+    const transactions = new TransactionsTool(apiKey);
+    const historicalPrices = new HistoricalTokenPriceTool(apiKey);
+
+    // Create AI agent
     const agent = new Agent({
         name: "blockchain researcher",
         model: {
@@ -24,29 +32,21 @@ const ApiServices = async () => {
             transactions: new TransactionsTool(apiKey),
         },
     });
-    const apiKey = process.env.GOLDRUSH_API_KEY || "";
-    const walletAddress = process.env.WALLET_ADDRESS || "0x410f66099309c2379921f12E0B387f6F7e519136";
-    
-    // Initialize all tools
-    const tokenBalances = new TokenBalancesTool(apiKey);
-    const nftHoldings = new NFTBalancesTool(apiKey);
-    const transactions = new TransactionsTool(apiKey);
-    const historicalPrices = new HistoricalTokenPriceTool(apiKey);
     
     try {
-        // Get token balances
+        // Fetch token balances
         const balances = await tokenBalances.get("eth-mainnet", walletAddress);
         console.log("Token Balances:", balances);
 
-        // Get NFT holdings
+        // Fetch NFT holdings
         const nfts = await nftHoldings.get("eth-mainnet", walletAddress);
         console.log("NFT Holdings:", nfts);
 
-        // Get transaction history
+        // Fetch transaction history
         const txHistory = await transactions.get("eth-mainnet", walletAddress);
         console.log("Transaction History:", txHistory);
 
-        // Get historical prices for ETH
+        // Fetch ETH price history (24h)
         const priceHistory = await historicalPrices.get("eth-mainnet", "ETH", "24h");
         console.log("ETH Price History (24h):", priceHistory);
 
