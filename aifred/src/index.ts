@@ -28,6 +28,10 @@ const zee = new ZeeWorkflow({
     description: "A workflow that analyzes blockchain data",
     output: "Blockchain analysis results",
     agents: { agent1 },
+    parameters: {
+        wallet_address: process.env.WALLET_ADDRESS || "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",  // example wallet
+        chain: "eth-mainnet"
+    }
 });
 
 (async function main() {
