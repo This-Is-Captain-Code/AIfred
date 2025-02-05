@@ -4,11 +4,26 @@ import {
     TokenBalancesTool,
     NFTBalancesTool,
     TransactionsTool,
-    HistoricalTokenPriceTool 
+    HistoricalTokenPriceTool,
+    Agent
 } from "@covalenthq/ai-agent-sdk";
 import "dotenv/config";
 
 const ApiServices = async () => {
+    const apiKey = process.env.GOLDRUSH_API_KEY || "";
+    const agent = new Agent({
+        name: "blockchain researcher",
+        model: {
+            provider: "OPEN_AI",
+            name: "gpt-4-mini",
+        },
+        description: "You are a blockchain researcher analyzing wallet activities.",
+        tools: {
+            tokenBalances: new TokenBalancesTool(apiKey),
+            nftBalances: new NFTBalancesTool(apiKey),
+            transactions: new TransactionsTool(apiKey),
+        },
+    });
     const apiKey = process.env.GOLDRUSH_API_KEY || "";
     const walletAddress = process.env.WALLET_ADDRESS || "0x410f66099309c2379921f12E0B387f6F7e519136";
     
