@@ -5,7 +5,7 @@ import {} from //Agent,
 //TransactionsTool,
 //HistoricalTokenPriceTool
 "@covalenthq/ai-agent-sdk";
-import { GoldRushClient, Chains } from "@covalenthq/client-sdk";
+import { GoldRushClient, Chain } from "@covalenthq/client-sdk";
 import "dotenv/config";
 
 //const agent1 = new Agent({
@@ -37,7 +37,7 @@ const client = new GoldRushClient(process.env.GOLDRUSH_API_KEY || "");
 
 async function analyzeWallet(
     walletAddress: string,
-    chain: Chains = Chains.ETH_MAINNET,
+    chain: Chain = Chain.ETH_MAINNET,
 ) {
     try {
         const balances =
