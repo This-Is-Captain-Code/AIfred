@@ -17,9 +17,9 @@ const agent1 = new Agent({
     },
     description: "A blockchain researcher analyzing wallet activities.",
     tools: {
-        tokenBalances: new TokenBalancesTool(process.env.GOLDRUSH_API_KEY, "eth-mainnet", process.env.WALLET_ADDRESS),
-        nftBalances: new NFTBalancesTool(process.env.GOLDRUSH_API_KEY, "eth-mainnet", process.env.WALLET_ADDRESS),
-        transactions: new TransactionsTool(process.env.GOLDRUSH_API_KEY, "eth-mainnet", process.env.WALLET_ADDRESS),
+        tokenBalances: TokenBalancesTool.create(process.env.GOLDRUSH_API_KEY, "eth-mainnet", process.env.WALLET_ADDRESS),
+        nftBalances: NFTBalancesTool.create(process.env.GOLDRUSH_API_KEY, "eth-mainnet", process.env.WALLET_ADDRESS),
+        transactions: TransactionsTool.create(process.env.GOLDRUSH_API_KEY, "eth-mainnet", process.env.WALLET_ADDRESS),
         historicalPrices: new HistoricalTokenPriceTool(process.env.GOLDRUSH_API_KEY)
     },
 });
