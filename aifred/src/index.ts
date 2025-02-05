@@ -1,11 +1,10 @@
-import { 
-  //Agent, 
-  //ZeeWorkflow,
-  //TokenBalancesTool,
-  //NFTBalancesTool,
-  //TransactionsTool,
-  //HistoricalTokenPriceTool 
-} from "@covalenthq/ai-agent-sdk";
+import {} from //Agent,
+//ZeeWorkflow,
+//TokenBalancesTool,
+//NFTBalancesTool,
+//TransactionsTool,
+//HistoricalTokenPriceTool
+"@covalenthq/ai-agent-sdk";
 import { GoldRushClient, Chain } from "@covalenthq/client-sdk";
 import "dotenv/config";
 
@@ -34,11 +33,18 @@ import "dotenv/config";
 //    }
 //});
 
-const client = new GoldRushClient(process.env.GOLDRUSH_API_KEY || ""); 
+const client = new GoldRushClient(process.env.GOLDRUSH_API_KEY || "");
 
-async function analyzeWallet(walletAddress: string, chain: Chain = Chain.ETH_MAINNET) {
+async function analyzeWallet(
+    walletAddress: string,
+    chain: Chain = Chain.ETH_MAINNET,
+) {
     try {
-        const balances = await client.BalanceService.getTokenBalancesForWalletAddress(chain, walletAddress);
+        const balances =
+            await client.BalanceService.getTokenBalancesForWalletAddress(
+                chain,
+                walletAddress,
+            );
         if (!balances.error) {
             console.log("Token Balances:", balances.data);
         } else {
@@ -49,7 +55,8 @@ async function analyzeWallet(walletAddress: string, chain: Chain = Chain.ETH_MAI
     }
 }
 
-const walletAddress = process.env.WALLET_ADDRESS || "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
+const walletAddress =
+    process.env.WALLET_ADDRESS || "0x410f66099309c2379921f12E0B387f6F7e519136";
 analyzeWallet(walletAddress);
 
 //(async function main() {
