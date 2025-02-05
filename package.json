@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@covalenthq/ai-agent-sdk": "^0.2.2",
     "@covalenthq/client-sdk": "^2.2.3"
   }
 }
