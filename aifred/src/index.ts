@@ -1,3 +1,4 @@
+
 import {
     TokenBalancesTool,
     NFTBalancesTool,
@@ -8,30 +9,50 @@ import {
 import "dotenv/config";
 
 const ApiServices = async () => {
-    const apiKey = process.env.GOLDRUSH_API_KEY || "";
-    const walletAddress = process.env.WALLET_ADDRESS || "";
+    try {
+        const apiKey = process.env.GOLDRUSH_API_KEY || "";
+        const walletAddress = process.env.WALLET_ADDRESS || "";
 
-    // Initialize tools
-    const tokenBalances = new TokenBalancesTool(apiKey);
-    const nftHoldings = new NFTBalancesTool(apiKey);
-    const transactions = new TransactionsTool(apiKey);
-    const historicalPrices = new HistoricalTokenPriceTool(apiKey);
+        if (!apiKey) {
+            throw new Error("GOLDRUSH_API_KEY is required");
+        }
 
-    // Create AI agent
-    const agent = new Agent({
-        name: "blockchain researcher",
-        model: {
-            provider: "OPEN_AI",
-            name: "gpt-4",
-        },
-        description:
-            "You are a blockchain researcher analyzing wallet activities.",
-        tools: {
-            tokenBalances: new TokenBalancesTool(apiKey),
-            nftBalances: new NFTBalancesTool(apiKey),
-            transactions: new TransactionsTool(apiKey),
-        },
-    });
+        if (!walletAddress) {
+            throw new Error("WALLET_ADDRESS is required");
+        }
+
+        // Initialize tools
+        const tokenBalances = new TokenBalancesTool(apiKey);
+        const nftHoldings = new NFTBalancesTool(apiKey);
+        const transactions = new TransactionsTool(apiKey);
+        const historicalPrices = new HistoricalTokenPriceTool(apiKey);
+
+        // Create AI agent
+        const agent = new Agent({
+            name: "blockchain researcher",
+            model: {
+                provider: "OPEN_AI",
+                name: "gpt-4",
+            },
+            description:
+                "You are a blockchain researcher analyzing wallet activities.",
+            tools: {
+                tokenBalances,
+                nftBalances: nftHoldings,
+                transactions,
+            },
+        });
+
+        // Execute a sample query
+        const response = await agent.execute(`What are the token balances for wallet ${walletAddress}?`);
+        console.log("Agent Response:", response);
+    } catch (error) {
+        console.error("Error:", error);
+        process.exit(1);
+    }
 };
 
-ApiServices();
+ApiServices().catch(error => {
+    console.error("Unhandled Error:", error);
+    process.exit(1);
+});
