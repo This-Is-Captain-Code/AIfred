@@ -15,7 +15,7 @@ const agent1 = new Agent({
         name: "gpt-4o-mini",
     },
     description:
-        "A blockchain researcher analyzing wallet activities for the address captaincode.eth on eth-mainnet.",
+        "A blockchain researcher analyzing wallet activities for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet.",
     tools: {
         tokenBalances: new TokenBalancesTool(process.env.GOLDRUSH_API_KEY),
         nftBalances: new NFTBalancesTool(process.env.GOLDRUSH_API_KEY),
@@ -26,11 +26,20 @@ const agent1 = new Agent({
     },
 });
 
+const agent2 = new Agent({
+    name: "prateek-panwar",
+    model: {
+        provider: "OPEN_AI",
+        name: "gpt-4o-mini",
+    },
+    description: "give a FUD about the blockchain wallet",
+});
+
 const zee = new ZeeWorkflow({
     description:
-        "A workflow that analyzes blockchain data for the address captaincode.eth on eth-mainnet.",
+        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
     output: "Blockchain analysis results",
-    agents: { agent1 },
+    agents: { agent1, agent2 },
 });
 
 (async function main() {
