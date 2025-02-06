@@ -1,3 +1,4 @@
+
 import {
     Agent,
     ZeeWorkflow,
@@ -6,7 +7,24 @@ import {
     TransactionsTool,
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
+import { OpenAI } from "@langchain/openai";
+import { ToolParams, Tool } from "@langchain/core/tools";
 import "dotenv/config";
+
+// Create a LangChain tool
+const companyReportTool = new Tool({
+    name: "get-company-report",
+    description: "Get current state of the company",
+    func: async (): Promise<string> => {
+        return "The current state of the company is good";
+    }
+});
+
+// Initialize LangChain
+const model = new OpenAI({
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    modelName: "gpt-4"
+});
 
 const agent1 = new Agent({
     name: "blockchain-researcher",
@@ -23,6 +41,7 @@ const agent1 = new Agent({
         historicalPrices: new HistoricalTokenPriceTool(
             process.env.GOLDRUSH_API_KEY,
         ),
+        companyReport: companyReportTool,
     },
 });
 
@@ -37,8 +56,8 @@ const agent2 = new Agent({
 
 const zee = new ZeeWorkflow({
     description:
-        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
-    output: "Blockchain analysis results",
+        "A workflow that analyzes blockchain data and company reports",
+    output: "Combined analysis results",
     agents: { agent1, agent2 },
 });
 
