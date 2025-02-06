@@ -1,46 +1,36 @@
-
-import { Agent, ZeeWorkflow } from "@covalenthq/ai-agent-sdk";
-import { TokenBalancesTool, NFTHoldingsTool, TransactionHistoryTool, HistoricalTokenPriceTool } from "@goldrush/sdk";
+import {
+    Agent,
+    ZeeWorkflow,
+    TokenBalancesTool,
+    NFTBalancesTool,
+    TransactionsTool,
+    HistoricalTokenPriceTool,
+} from "@covalenthq/ai-agent-sdk";
 import "dotenv/config";
 
-// Initialize GoldRush tools
-const tokenBalances = new TokenBalancesTool(process.env.GOLDRUSH_API_KEY);
-const nftHoldings = new NFTHoldingsTool(process.env.GOLDRUSH_API_KEY);
-const transactionHistory = new TransactionHistoryTool(process.env.GOLDRUSH_API_KEY);
-const historicalPrices = new HistoricalTokenPriceTool(process.env.GOLDRUSH_API_KEY);
-
-const blockchainResearcher = new Agent({
-    name: "BlockchainResearcher",
+const agent1 = new Agent({
+    name: "blockchain-researcher",
     model: {
         provider: "OPEN_AI",
         name: "gpt-4o-mini",
     },
-    description: "A blockchain researcher analyzing wallet activities.",
+    description:
+        "A blockchain researcher analyzing wallet activities for the address captaincode.eth on eth-mainnet.",
     tools: {
-        tokenBalances,
-        nftHoldings,
-        transactionHistory,
-        historicalPrices
-    },
-});
-
-const dataAnalyst = new Agent({
-    name: "DataAnalyst",
-    model: {
-        provider: "OPEN_AI",
-        name: "gpt-4o-mini",
-    },
-    description: "An analyst that processes and interprets blockchain data.",
-    tools: {
-        tokenBalances,
-        historicalPrices
+        tokenBalances: new TokenBalancesTool(process.env.GOLDRUSH_API_KEY),
+        nftBalances: new NFTBalancesTool(process.env.GOLDRUSH_API_KEY),
+        transactions: new TransactionsTool(process.env.GOLDRUSH_API_KEY),
+        historicalPrices: new HistoricalTokenPriceTool(
+            process.env.GOLDRUSH_API_KEY,
+        ),
     },
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow for analyzing blockchain data and providing insights",
-    output: "Detailed blockchain analysis results",
-    agents: { blockchainResearcher, dataAnalyst },
+    description:
+        "A workflow that analyzes blockchain data for the address captaincode.eth on eth-mainnet.",
+    output: "Blockchain analysis results",
+    agents: { agent1 },
 });
 
 (async function main() {
