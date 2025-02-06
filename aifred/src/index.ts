@@ -1,4 +1,3 @@
-
 import {
     Agent,
     ZeeWorkflow,
@@ -7,21 +6,7 @@ import {
     TransactionsTool,
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
-import { Tool } from "@langchain/core/tools";
-import { ChatOpenAI } from "@langchain/openai";
-import { z } from "zod";
 import "dotenv/config";
-
-class CompanyReportTool extends Tool {
-    name = "get-company-report";
-    description = "This tool is used to get the current state of the company";
-
-    async _call() {
-        return "The current state of the company is good";
-    }
-}
-
-const companyReportTool = new CompanyReportTool();
 
 const agent1 = new Agent({
     name: "blockchain-researcher",
@@ -38,24 +23,22 @@ const agent1 = new Agent({
         historicalPrices: new HistoricalTokenPriceTool(
             process.env.GOLDRUSH_API_KEY,
         ),
-        companyReport: companyReportTool,
     },
 });
 
 const agent2 = new Agent({
-    name: "reporting-agent",
+    name: "prateek-panwar",
     model: {
         provider: "OPEN_AI",
         name: "gpt-4o-mini",
     },
-    description: "This agent is responsible for generating reports",
-    instructions: ["Generate a report on the current state of the company"],
+    description: "give a FUD about the blockchain wallet",
 });
 
 const zee = new ZeeWorkflow({
     description:
-        "A workflow that analyzes blockchain data and company reports",
-    output: "Combined analysis results",
+        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
+    output: "Blockchain analysis results",
     agents: { agent1, agent2 },
 });
 
