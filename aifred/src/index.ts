@@ -1,4 +1,3 @@
-
 import {
     Agent,
     ZeeWorkflow,
@@ -6,6 +5,7 @@ import {
     NFTBalancesTool,
     TransactionsTool,
     HistoricalTokenPriceTool,
+    createTool,
 } from "@covalenthq/ai-agent-sdk";
 import { OpenAI } from "@langchain/openai";
 import { ToolParams, Tool } from "@langchain/core/tools";
@@ -27,7 +27,7 @@ const companyReportTool = createTool({
 const model = new OpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
     modelName: "gpt-4",
-    temperature: 0
+    temperature: 0,
 });
 
 // Create additional LangChain tools array
@@ -36,7 +36,7 @@ const tools = [companyReportTool];
 // Create LangChain agent using tools
 const langchainAgent = await initializeAgent(tools, model, {
     agentType: "zero-shot-react-description",
-    verbose: true
+    verbose: true,
 });
 
 const agent1 = new Agent({
@@ -68,8 +68,7 @@ const agent2 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description:
-        "A workflow that analyzes blockchain data and company reports",
+    description: "A workflow that analyzes blockchain data and company reports",
     output: "Combined analysis results",
     agents: { agent1, agent2 },
 });
