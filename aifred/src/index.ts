@@ -1,4 +1,3 @@
-
 import {
     Agent,
     ZeeWorkflow,
@@ -42,7 +41,6 @@ const agent1 = new Agent({
         historicalPrices: new HistoricalTokenPriceTool(
             process.env.GOLDRUSH_API_KEY,
         ),
-        companyReport: companyReportTool,
     },
 });
 
@@ -60,8 +58,7 @@ const reportingAgent = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description:
-        "A workflow that analyzes blockchain data and company reports",
+    description: "A workflow that analyzes blockchain data and company reports",
     output: "Combined analysis results",
     agents: { agent1, reportingAgent },
 });
