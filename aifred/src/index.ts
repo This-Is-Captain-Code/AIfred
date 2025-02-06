@@ -8,6 +8,7 @@ import {
     createTool,
 } from "@covalenthq/ai-agent-sdk";
 import { OpenAI } from "@langchain/openai";
+import { initializeAgent } from "langchain/agents";
 import { ToolParams, Tool } from "@langchain/core/tools";
 import "dotenv/config";
 
