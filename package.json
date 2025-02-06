@@ -12,8 +12,12 @@
   "dependencies": {
     "@covalenthq/ai-agent-sdk": "^0.2.2",
     "@covalenthq/client-sdk": "^2.2.3",
+    "@langchain/core": "^0.3.38",
+    "@langchain/openai": "^0.4.2",
     "dotenv": "^16.4.7",
+    "langchain": "^0.3.15",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "zod": "^3.24.1"
   }
 }
