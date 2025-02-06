@@ -15,15 +15,25 @@ import "dotenv/config";
 const companyReportTool = new Tool({
     name: "get-company-report",
     description: "Get current state of the company",
-    func: async (): Promise<string> => {
+    func: async (input: string): Promise<string> => {
         return "The current state of the company is good";
     }
 });
 
-// Initialize LangChain
+// Initialize LangChain model and tools
 const model = new OpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-4"
+    modelName: "gpt-4",
+    temperature: 0
+});
+
+// Create additional LangChain tools array
+const tools = [companyReportTool];
+
+// Create LangChain agent using tools
+const langchainAgent = await initializeAgent(tools, model, {
+    agentType: "zero-shot-react-description",
+    verbose: true
 });
 
 const agent1 = new Agent({
