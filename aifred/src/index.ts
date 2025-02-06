@@ -12,12 +12,15 @@ import { ToolParams, Tool } from "@langchain/core/tools";
 import "dotenv/config";
 
 // Create a LangChain tool
-const companyReportTool = new Tool({
-    name: "get-company-report",
-    description: "Get current state of the company",
-    func: async (input: string): Promise<string> => {
+import { z } from "zod";
+
+const companyReportTool = createTool({
+    id: "get-company-report",
+    description: "This tool is used to get the current state of the company",
+    schema: z.object({}),
+    execute: async (params) => {
         return "The current state of the company is good";
-    }
+    },
 });
 
 // Initialize LangChain model and tools
