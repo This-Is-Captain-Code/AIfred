@@ -123,18 +123,9 @@ const zee = new ZeeWorkflow({
     description: "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
     output: "A creative poem",
     agents: { agent3 },
-    router: {
-        initial_task: "Write a sonnet about changing seasons",
-        output_handler: (result) => {
-            if (result.output) {
-                return { content: result.output };
-            }
-            return result;
-        }
-    }
 });
 
 (async function main() {
     const result = await ZeeWorkflow.run(zee);
-    console.log("Final Poem:", result);
+    console.log("ZEE Result:", result);
 })();
