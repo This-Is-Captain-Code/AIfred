@@ -41,6 +41,7 @@ const createLangChainAgent = async () => {
     const prompt = ChatPromptTemplate.fromMessages([
         ["system", "You are a crypto wallet analyzer. Use the tools to analyze wallets."],
         ["human", "{input}"],
+        ["human", "{agent_scratchpad}"],
     ]);
     
     const agent = await createOpenAIFunctionsAgent({
