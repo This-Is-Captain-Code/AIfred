@@ -18,7 +18,7 @@ export default function Home() {
         body: JSON.stringify({ description, output }),
       });
       const data = await response.json();
-      setResult(data.result);
+      setResult(data.result || 'No result generated');
     } catch (error) {
       console.error('Error:', error);
     }

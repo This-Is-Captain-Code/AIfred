@@ -87,8 +87,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       agents: { agent3 }
     });
 
-    const result = await ZeeWorkflow.run(zee);
-    res.status(200).json({ result });
+    const workflowResult = await ZeeWorkflow.run(zee);
+    res.status(200).json({ result: JSON.stringify(workflowResult) });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Failed to generate response' });
