@@ -16,32 +16,39 @@ import "dotenv/config";
 import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
 
-// Create a custom LangChain tool
-const cryptoAnalysisTool = new DynamicStructuredTool({
-    name: "crypto_analysis",
-    description: "Analyzes cryptocurrency wallet activity",
+// Create a custom LangChain math tool
+const mathTool = new DynamicStructuredTool({
+    name: "calculator",
+    description: "Performs mathematical calculations",
     schema: {
         type: "object",
         properties: {
-            address: { type: "string", description: "Wallet address to analyze" },
+            operation: { type: "string", description: "Mathematical operation (add, subtract, multiply, divide, power)" },
+            num1: { type: "number", description: "First number" },
+            num2: { type: "number", description: "Second number" },
         },
-        required: ["address"],
+        required: ["operation", "num1", "num2"],
     },
-    func: async (input: unknown) => {
-        if (typeof input === 'object' && input !== null && 'address' in input && typeof (input as { address: string }).address === 'string') {
-            return `Analysis completed for address ${(input as { address: string }).address}`;
+    func: async (input: any) => {
+        const { operation, num1, num2 } = input;
+        switch (operation.toLowerCase()) {
+            case 'add': return num1 + num2;
+            case 'subtract': return num1 - num2;
+            case 'multiply': return num1 * num2;
+            case 'divide': return num2 !== 0 ? num1 / num2 : 'Cannot divide by zero';
+            case 'power': return Math.pow(num1, num2);
+            default: return 'Invalid operation';
         }
-        throw new Error('Invalid input: address must be a string');
     },
 });
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
     const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0 });
-    const tools = [cryptoAnalysisTool];
+    const tools = [mathTool];
     
     const prompt = ChatPromptTemplate.fromMessages([
-        ["system", "You are a crypto wallet analyzer. Use the tools to analyze wallets."],
+        ["system", "You are a math assistant. Use the calculator tool to perform mathematical operations."],
         ["human", "{input}"],
         ["human", "{agent_scratchpad}"],
     ]);
@@ -87,15 +94,17 @@ const agent2 = new Agent({
 });
 
 const langChainTool = createTool({
-    id: "langchain-analysis",
-    description: "Analyzes cryptocurrency wallet using LangChain",
+    id: "math-calculator",
+    description: "Performs mathematical calculations",
     schema: z.object({
-        address: z.string().describe("Wallet address to analyze")
+        operation: z.string().describe("Mathematical operation"),
+        num1: z.number().describe("First number"),
+        num2: z.number().describe("Second number")
     }),
     execute: async (params) => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: `Analyze the wallet ${params.address}`,
+            input: `Perform ${params.operation} on ${params.num1} and ${params.num2}`,
         });
         return result.output;
     },
