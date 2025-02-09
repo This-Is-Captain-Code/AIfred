@@ -16,7 +16,6 @@ import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
 import { OpenAIImages } from "langchain/llms/openai";
 
-
 // Create a custom LangChain math tool
 const mathTool = new DynamicStructuredTool({
     name: "calculator",
@@ -132,18 +131,17 @@ const dalleTool = new DynamicStructuredTool({
         properties: {
             prompt: {
                 type: "string",
-                description: "The image generation prompt"
-            }
+                description: "The image generation prompt",
+            },
         },
-        required: ["prompt"]
+        required: ["prompt"],
     },
     func: async ({ prompt }) => {
         const imageModel = new OpenAIImages();
         const image = await imageModel.generate(prompt);
         return image[0].url;
-    }
+    },
 });
-
 
 const agent3 = new Agent({
     name: "langchain-agent",
@@ -154,12 +152,12 @@ const agent3 = new Agent({
     description: "An agent that uses LangChain for wallet analysis",
     tools: {
         langChainAnalysis: langChainTool,
-        dalle: dalleTool
+        dalle: dalleTool,
     },
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow that multiplies 5 with 5",
+    description: "A workflow that generates the image of 5",
     output: "Math analysis results",
     agents: { agent3 },
 });
