@@ -46,9 +46,9 @@ const createLangChainAgent = async () => {
     const prompt = ChatPromptTemplate.fromMessages([
         [
             "system",
-            "You are a creative poet. Use the writePoem tool to create beautiful poems based on given topics and styles.",
+            "You are a creative poet. Your task is to write beautiful poems using the writePoem tool.",
         ],
-        ["human", "{input}"],
+        ["human", "Write a poem based on this request: {input}"],
         ["human", "{agent_scratchpad}"],
     ]);
 
@@ -98,10 +98,10 @@ const langChainTool = createTool({
     schema: z.object({
         prompt: z.string().describe("The complete poem request"),
     }),
-    execute: async ({ prompt }) => {
+    execute: async () => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: prompt,
+            input: "Write a sonnet about the beauty of changing seasons in nature",
         });
         return result.output;
     },
