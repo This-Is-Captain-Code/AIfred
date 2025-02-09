@@ -1,0 +1,164 @@
+chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 7:parser:OpenAIFunctionsAgentOutputParser] [1ms] Exiting Chain run with output: {
+  "returnValues": {
+    "output": "I'm sorry, but I can't perform calculations with undefined values. Please provide the specific numbers and the operation you want to perform."
+  },
+  "log": "I'm sorry, but I can't perform calculations with undefined values. Please provide the specific numbers and the operation you want to perform."
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent] [1.64s] Exiting Chain run with output: {
+  "returnValues": {
+    "output": "I'm sorry, but I can't perform calculations with undefined values. Please provide the specific numbers and the operation you want to perform."
+  },
+  "log": "I'm sorry, but I can't perform calculations with undefined values. Please provide the specific numbers and the operation you want to perform."
+}
+[chain/end] [1:chain:AgentExecutor] [1.64s] Exiting Chain run with output: {
+  "input": "Perform undefined on undefined and undefined",
+  "output": "I'm sorry, but I can't perform calculations with undefined values. Please provide the specific numbers and the operation you want to perform."
+}
+[llm/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 6:llm:ChatOpenAI] [1.91s] Exiting LLM run with output: {
+  "generations": [
+    [
+      {
+        "text": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?",
+        "generationInfo": {
+          "prompt": 0,
+          "completion": 0,
+          "finish_reason": "stop",
+          "system_fingerprint": null,
+          "model_name": "gpt-4-0613"
+        },
+        "message": {
+          "lc": 1,
+          "type": "constructor",
+          "id": [
+            "langchain_core",
+            "messages",
+            "AIMessageChunk"
+          ],
+          "kwargs": {
+            "content": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?",
+            "additional_kwargs": {},
+            "response_metadata": {
+              "prompt": 0,
+              "completion": 0,
+              "usage": {
+                "prompt_tokens": 61,
+                "completion_tokens": 28,
+                "total_tokens": 89,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "audio_tokens": 0
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "audio_tokens": 0,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "finish_reason": "stop",
+              "system_fingerprint": null,
+              "model_name": "gpt-4-0613"
+            },
+            "tool_call_chunks": [],
+            "id": "chatcmpl-Az104rf6xEeSjfgwsqifIr9Gq8DJc",
+            "usage_metadata": {
+              "input_tokens": 61,
+              "output_tokens": 28,
+              "total_tokens": 89,
+              "input_token_details": {
+                "audio": 0,
+                "cache_read": 0
+              },
+              "output_token_details": {
+                "audio": 0,
+                "reasoning": 0
+              }
+            },
+            "tool_calls": [],
+            "invalid_tool_calls": []
+          }
+        }
+      }
+    ]
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "promptTokens": 61,
+      "completionTokens": 28,
+      "totalTokens": 89
+    }
+  }
+}
+[chain/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 7:parser:OpenAIFunctionsAgentOutputParser] Entering Chain run with input: {
+  "lc": 1,
+  "type": "constructor",
+  "id": [
+    "langchain_core",
+    "messages",
+    "AIMessageChunk"
+  ],
+  "kwargs": {
+    "content": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?",
+    "additional_kwargs": {},
+    "response_metadata": {
+      "prompt": 0,
+      "completion": 0,
+      "usage": {
+        "prompt_tokens": 61,
+        "completion_tokens": 28,
+        "total_tokens": 89,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "finish_reason": "stop",
+      "system_fingerprint": null,
+      "model_name": "gpt-4-0613"
+    },
+    "tool_call_chunks": [],
+    "id": "chatcmpl-Az104rf6xEeSjfgwsqifIr9Gq8DJc",
+    "usage_metadata": {
+      "input_tokens": 61,
+      "output_tokens": 28,
+      "total_tokens": 89,
+      "input_token_details": {
+        "audio": 0,
+        "cache_read": 0
+      },
+      "output_token_details": {
+        "audio": 0,
+        "reasoning": 0
+      }
+    },
+    "tool_calls": [],
+    "invalid_tool_calls": []
+  }
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 7:parser:OpenAIFunctionsAgentOutputParser] [0ms] Exiting Chain run with output: {
+  "returnValues": {
+    "output": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?"
+  },
+  "log": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?"
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent] [1.91s] Exiting Chain run with output: {
+  "returnValues": {
+    "output": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?"
+  },
+  "log": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?"
+}
+[chain/end] [1:chain:AgentExecutor] [1.91s] Exiting Chain run with output: {
+  "input": "Perform undefined on undefined and undefined",
+  "output": "I'm sorry, but I can't perform a calculation without specific numbers or a specific operation. Could you please provide more details?"
+}
+router (3) 
+  ⊢ agent3  Working on: I'm sorry, but I can't perform a calculation without specific numbers or mathematical operations. Could you please provide more details?
+router (3) 
+  ⊢ agent3  Working on: Clarify the specific parameters required for each data fetch.
+^C
