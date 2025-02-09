@@ -135,10 +135,9 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description:
-        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence and then does math on it to multiply the balance by 5",
-    output: "Blockchain analysis results",
-    agents: { agent1, agent2, agent3 },
+    description: "A workflow that multiplies 5 with 5",
+    output: "Math analysis results",
+    agents: { agent3 },
 });
 
 (async function main() {
