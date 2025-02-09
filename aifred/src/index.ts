@@ -10,6 +10,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { OpenRouterChat } from "langchain/chat_models/openrouter";
 import "dotenv/config";
 import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
@@ -40,7 +41,11 @@ const poemTool = new DynamicStructuredTool({
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
-    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.7 });
+    const llm = new OpenRouterChat({
+    modelName: "anthropic/claude-2",
+    temperature: 0.7,
+    apiKey: process.env.OPENROUTER_API_KEY
+});
     const tools = [poemTool];
 
     const prompt = ChatPromptTemplate.fromMessages([
