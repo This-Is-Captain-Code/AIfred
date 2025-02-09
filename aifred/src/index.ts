@@ -13,6 +13,8 @@ import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import "dotenv/config";
+import { createTool } from "@covalenthq/ai-agent-sdk";
+import { z } from "zod";
 
 // Create a custom LangChain tool
 const cryptoAnalysisTool = new DynamicStructuredTool({
@@ -84,22 +86,42 @@ const agent2 = new Agent({
     description: "give a FUD about the blockchain wallet",
 });
 
+const langChainTool = createTool({
+    id: "langchain-analysis",
+    description: "Analyzes cryptocurrency wallet using LangChain",
+    schema: z.object({
+        address: z.string().describe("Wallet address to analyze")
+    }),
+    execute: async (params) => {
+        const langChainAgent = await createLangChainAgent();
+        const result = await langChainAgent.invoke({
+            input: `Analyze the wallet ${params.address}`,
+        });
+        return result.output;
+    },
+});
+
+const agent3 = new Agent({
+    name: "langchain-agent",
+    model: {
+        provider: "OPEN_AI",
+        name: "gpt-4o-mini",
+    },
+    description: "An agent that uses LangChain for wallet analysis",
+    tools: {
+        langChainAnalysis: langChainTool
+    },
+});
+
 const zee = new ZeeWorkflow({
     description:
         "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
     output: "Blockchain analysis results",
-    agents: { agent1, agent2 },
+    agents: { agent1, agent2, agent3 },
 });
 
 (async function main() {
-    // Create and run LangChain agent
-    const langChainAgent = await createLangChainAgent();
-    const langChainResult = await langChainAgent.invoke({
-        input: "Analyze the wallet 0x883b3527067F03fD9A581D81020b17FC0d00784F",
-    });
-    console.log("LangChain Analysis:", langChainResult);
-
-    // Run ZEE workflow
+    // Run ZEE workflow with all agents including LangChain
     const result = await ZeeWorkflow.run(zee);
     console.log("ZEE Result:", result);
 })();
