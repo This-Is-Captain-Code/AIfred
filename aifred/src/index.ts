@@ -35,11 +35,39 @@ const agent2 = new Agent({
     description: "give a FUD about the blockchain wallet",
 });
 
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { initializeAgentExecutorWithOptions } from "langchain/agents";
+import { ChainTool } from "langchain/tools";
+
+const model = new ChatOpenAI({
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    modelName: "gpt-4",
+    temperature: 0
+});
+
+const toolKit = new ChainTool({
+    name: "blockchain-analyzer",
+    description: "Analyzes blockchain data and provides insights",
+    chain: async (input: string) => {
+        return `Analysis result for: ${input}`;
+    }
+});
+
+const agent3 = await initializeAgentExecutorWithOptions(
+    [toolKit],
+    model,
+    {
+        agentType: "chat-conversational-react-description",
+        verbose: true
+    }
+);
+
 const zee = new ZeeWorkflow({
     description:
         "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
     output: "Blockchain analysis results",
-    agents: { agent1, agent2 },
+    agents: { agent1, agent2, agent3 },
 });
 
 (async function main() {
