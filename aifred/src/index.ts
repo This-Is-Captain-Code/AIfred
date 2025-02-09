@@ -13,33 +13,27 @@ import "dotenv/config";
 import { Tool } from "@langchain/core/tools";
 
 // Custom LangChain FUD Generator Tool
-class LangChainFUDTool implements Tool {
+class LangChainFUDTool extends Tool {
     name = "langchain-fud";
     description = "Generates FUD using LangChain analysis";
-    schema = {
-        type: "object",
-        properties: {
-            analysis: { type: "string" }
-        },
-        required: ["analysis"]
-    };
     private chain: any;
 
     constructor() {
+        super();
         const llm = new OpenAI({
             openAIApiKey: process.env.OPENAI_API_KEY,
             temperature: 0.9,
         });
 
         const prompt = PromptTemplate.fromTemplate(
-            "Generate intense FUD about this blockchain analysis: {analysis}",
+            "Generate intense FUD about this blockchain analysis: {input}",
         );
 
         this.chain = prompt.pipe(llm);
     }
 
-    async call(input: { analysis: string }): Promise<string> {
-        return this.chain.invoke(input);
+    async _call(input: string): Promise<string> {
+        return this.chain.invoke({ input });
     }
 }
 
