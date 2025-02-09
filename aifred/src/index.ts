@@ -6,8 +6,7 @@ import {
     TransactionsTool,
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
-import { Tool } from "langchain/tools";
-import { OpenAI } from "langchain/llms/openai";
+import { ChatOpenAI } from "@langchain/openai";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
@@ -24,14 +23,15 @@ const poemTool = new DynamicStructuredTool({
         properties: {
             topic: {
                 type: "string",
-                description: "The main topic or theme of the poem"
+                description: "The main topic or theme of the poem",
             },
             style: {
                 type: "string",
-                description: "Style of poem (haiku, sonnet, free verse, limerick)"
-            }
+                description:
+                    "Style of poem (haiku, sonnet, free verse, limerick)",
+            },
         },
-        required: ["topic", "style"]
+        required: ["topic", "style"],
     },
     func: async (input: any) => {
         return `Generated a ${input.style} about ${input.topic}`;
@@ -40,18 +40,7 @@ const poemTool = new DynamicStructuredTool({
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
-    const llm = new OpenAI({
-        modelName: "openai/gpt-4",
-        temperature: 0.7,
-        configuration: {
-            baseURL: "https://openrouter.ai/api/v1",
-            apiKey: process.env.OPENROUTER_API_KEY,
-            defaultHeaders: {
-                "HTTP-Referer": "https://replit.com",
-                "X-Title": "Replit AIfred"
-            }
-        }
-    });
+    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.7 });
     const tools = [poemTool];
 
     const prompt = ChatPromptTemplate.fromMessages([
@@ -131,9 +120,10 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description: "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
+    description:
+        "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
     output: "A creative poem",
-    agents: { agent3 }
+    agents: { agent3 },
 });
 
 (async function main() {
