@@ -1,4 +1,3 @@
-
 import {
     Agent,
     ZeeWorkflow,
@@ -23,7 +22,11 @@ const mathTool = new DynamicStructuredTool({
     schema: {
         type: "object",
         properties: {
-            operation: { type: "string", description: "Mathematical operation (add, subtract, multiply, divide, power)" },
+            operation: {
+                type: "string",
+                description:
+                    "Mathematical operation (add, subtract, multiply, divide, power)",
+            },
             num1: { type: "number", description: "First number" },
             num2: { type: "number", description: "Second number" },
         },
@@ -32,12 +35,18 @@ const mathTool = new DynamicStructuredTool({
     func: async (input: any) => {
         const { operation, num1, num2 } = input;
         switch (operation.toLowerCase()) {
-            case 'add': return num1 + num2;
-            case 'subtract': return num1 - num2;
-            case 'multiply': return num1 * num2;
-            case 'divide': return num2 !== 0 ? num1 / num2 : 'Cannot divide by zero';
-            case 'power': return Math.pow(num1, num2);
-            default: return 'Invalid operation';
+            case "add":
+                return num1 + num2;
+            case "subtract":
+                return num1 - num2;
+            case "multiply":
+                return num1 * num2;
+            case "divide":
+                return num2 !== 0 ? num1 / num2 : "Cannot divide by zero";
+            case "power":
+                return Math.pow(num1, num2);
+            default:
+                return "Invalid operation";
         }
     },
 });
@@ -46,19 +55,22 @@ const mathTool = new DynamicStructuredTool({
 const createLangChainAgent = async () => {
     const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0 });
     const tools = [mathTool];
-    
+
     const prompt = ChatPromptTemplate.fromMessages([
-        ["system", "You are a math assistant. Use the calculator tool to perform mathematical operations."],
+        [
+            "system",
+            "You are a math assistant. Use the calculator tool to perform mathematical operations.",
+        ],
         ["human", "{input}"],
         ["human", "{agent_scratchpad}"],
     ]);
-    
+
     const agent = await createOpenAIFunctionsAgent({
         llm,
         tools,
         prompt,
     });
-    
+
     return AgentExecutor.fromAgentAndTools({
         agent,
         tools,
@@ -99,7 +111,7 @@ const langChainTool = createTool({
     schema: z.object({
         operation: z.string().describe("Mathematical operation"),
         num1: z.number().describe("First number"),
-        num2: z.number().describe("Second number")
+        num2: z.number().describe("Second number"),
     }),
     execute: async (params) => {
         const langChainAgent = await createLangChainAgent();
@@ -118,13 +130,13 @@ const agent3 = new Agent({
     },
     description: "An agent that uses LangChain for wallet analysis",
     tools: {
-        langChainAnalysis: langChainTool
+        langChainAnalysis: langChainTool,
     },
 });
 
 const zee = new ZeeWorkflow({
     description:
-        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
+        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence and then does math on it to multiply the balance by 5",
     output: "Blockchain analysis results",
     agents: { agent1, agent2, agent3 },
 });
