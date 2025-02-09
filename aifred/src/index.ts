@@ -99,10 +99,10 @@ const langChainTool = createTool({
         topic: z.string().describe("Topic or theme for the poem"),
         style: z.string().describe("Style of poem to generate"),
     }),
-    execute: async () => {
+    execute: async ({ topic, style }) => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: "Write a sonnet about the beauty of changing seasons in nature",
+            input: `Write a ${style} about ${topic}`,
         });
         return result.output;
     },
@@ -121,9 +121,13 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description: "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
-    output: "A creative poem",
+    description: "Use the langchain-agent to write a sonnet about the beauty of changing seasons in nature",
+    output: "A creative sonnet about seasons",
     agents: { agent3 },
+    input: {
+        topic: "the beauty of changing seasons in nature",
+        style: "sonnet"
+    }
 });
 
 (async function main() {
