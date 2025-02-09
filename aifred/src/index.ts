@@ -121,12 +121,15 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow that generates creative poems",
-    output: "Math analysis results",
+    description: "A workflow that generates creative poems about nature and seasons",
+    output: "Generated poem",
     agents: { agent3 },
 });
 
 (async function main() {
+    const topic = "Nature - The beauty of the changing seasons";
+    const style = "sonnet";
+    await agent3.addMessage(`Write a ${style} poem about ${topic}`);
     // Run ZEE workflow with all agents including LangChain
     const result = await ZeeWorkflow.run(zee);
     console.log("ZEE Result:", result);
