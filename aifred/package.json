@@ -36,7 +36,9 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@covalenthq/ai-agent-sdk": "^0.2.0",
+    "@langchain/core": "^0.3.39",
     "dotenv": "^16.4.7",
-    "@covalenthq/ai-agent-sdk": "^0.2.0"
+    "langchain": "^0.3.15"
   }
 }

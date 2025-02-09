@@ -6,8 +6,33 @@ import {
     TransactionsTool,
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { OpenAI } from "@langchain/openai";
 import "dotenv/config";
 
+// Custom LangChain FUD Generator Tool
+class LangChainFUDTool {
+    private chain: any;
+
+    constructor() {
+        const llm = new OpenAI({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+            temperature: 0.9,
+        });
+
+        const prompt = PromptTemplate.fromTemplate(
+            "Generate intense FUD about this blockchain analysis: {analysis}",
+        );
+
+        this.chain = prompt.pipe(llm);
+    }
+
+    async execute(input: { analysis: string }): Promise<string> {
+        return this.chain.invoke(input);
+    }
+}
+
+// Original Agents
 const agent1 = new Agent({
     name: "blockchain-researcher",
     model: {
@@ -32,41 +57,26 @@ const agent2 = new Agent({
         provider: "OPEN_AI",
         name: "gpt-4o-mini",
     },
-    description: "give a FUD about the blockchain wallet",
+    description: "Give a FUD about the blockchain wallet",
 });
 
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { ChainTool } from "langchain/tools";
-
-const model = new ChatOpenAI({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-4",
-    temperature: 0
+// New LangChain-powered Agent
+const agent3 = new Agent({
+    name: "langchain-fud-specialist",
+    model: {
+        provider: "OPEN_AI",
+        name: "gpt-4o-mini",
+    },
+    description: "Generates advanced FUD using LangChain analysis",
+    tools: {
+        langchainFUD: new LangChainFUDTool(),
+    },
 });
-
-const toolKit = new ChainTool({
-    name: "blockchain-analyzer",
-    description: "Analyzes blockchain data and provides insights",
-    chain: async (input: string) => {
-        return `Analysis result for: ${input}`;
-    }
-});
-
-const agent3 = await initializeAgentExecutorWithOptions(
-    [toolKit],
-    model,
-    {
-        agentType: "chat-conversational-react-description",
-        verbose: true
-    }
-);
 
 const zee = new ZeeWorkflow({
     description:
-        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet and summarizes it in one sentence with the total balance it holds and FUDs it",
-    output: "Blockchain analysis results",
+        "A workflow that analyzes blockchain data for the address 0x883b3527067F03fD9A581D81020b17FC0d00784F on base-mainnet, summarizes it, and generates enhanced FUD using LangChain",
+    output: "Blockchain analysis with LangChain-enhanced FUD",
     agents: { agent1, agent2, agent3 },
 });
 
