@@ -1,0 +1,154 @@
+
+import React, { useRef, useEffect } from 'react';
+import * as THREE from 'three';
+
+const NoisyNebulaShader: React.FC = () => {
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) return;
+
+    const nebulaRenderer = new NoisyNebulaRenderer(mount);
+    return () => {
+      nebulaRenderer.cleanup();
+    };
+  }, []);
+
+  return <div ref={mountRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }} />;
+};
+
+class NoisyNebulaRenderer {
+  private container: HTMLDivElement;
+  private canvas: HTMLCanvasElement;
+  private scene: THREE.Scene;
+  private camera: THREE.OrthographicCamera;
+  private renderer: THREE.WebGLRenderer;
+  private material: THREE.ShaderMaterial;
+  private mesh: THREE.Mesh;
+  private startTime: number;
+
+  constructor(mount: HTMLDivElement) {
+    this.container = mount;
+    this.canvas = document.createElement('canvas');
+    this.canvas.className = 'webgl';
+    mount.appendChild(this.canvas);
+
+    this.scene = new THREE.Scene();
+    this.startTime = Date.now();
+
+    const { width, height } = this.getWindowSize();
+
+    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+    this.camera.position.z = 1;
+
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true });
+    this.renderer.setSize(width, height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    this.material = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        precision mediump float;
+        varying vec2 vUv;
+        uniform vec3 iResolution;
+        uniform float iTime;
+
+        const vec3 COLOR = vec3(0.2, 0.2, 0.2);
+        const vec3 BG = vec3(0.0, 0.0, 0.0);
+        const float ZOOM = 3.0;
+        const int OCTAVES = 4;
+        const float INTENSITY = 2.0;
+
+        float random(vec2 st) {
+          return fract(sin(dot(st.xy, vec2(12.9818, 79.279))) * 43758.5453123);
+        }
+
+        vec2 random2(vec2 st) {
+          st = vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)));
+          return -1.0 + 2.0 * fract(sin(st) * 7.);
+        }
+
+        float noise(vec2 st) {
+          vec2 i = floor(st);
+          vec2 f = fract(st);
+          vec2 u = f * f * (3.0 - 2.0 * f);
+          return mix(
+            mix(dot(random2(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
+                dot(random2(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), u.x),
+            mix(dot(random2(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
+                dot(random2(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), u.x), u.y);
+        }
+
+        float fbm(vec2 coord) {
+          float value = 0.0;
+          float scale = 0.2;
+          for (int i = 0; i < OCTAVES; i++) {
+            value += noise(coord) * scale;
+            coord *= 2.0;
+            scale *= 0.5;
+          }
+          return value + 0.2;
+        }
+
+        void main() {
+          vec2 fragCoord = vUv * iResolution.xy;
+          vec2 st = fragCoord.xy / iResolution.xy;
+          st *= iResolution.xy / iResolution.y;
+          vec2 pos = vec2(st * ZOOM);
+          vec2 motion = vec2(fbm(pos + vec2(iTime * -0.5, iTime * -0.3)));
+          float final = fbm(pos + motion) * INTENSITY;
+          gl_FragColor = vec4(mix(BG, COLOR, final), 1.0);
+        }
+      `,
+      uniforms: {
+        iResolution: { value: new THREE.Vector3(window.innerWidth, window.innerHeight, 1) },
+        iTime: { value: 0.0 }
+      },
+      transparent: true
+    });
+
+    this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material);
+    this.scene.add(this.mesh);
+    this.initEventListeners();
+    this.animate();
+  }
+
+  private getWindowSize() {
+    const rect = this.container.getBoundingClientRect();
+    return { width: window.innerWidth, height: rect.height || window.innerHeight };
+  }
+
+  private initEventListeners() {
+    window.addEventListener('resize', () => this.handleResize());
+  }
+
+  private handleResize() {
+    const { width, height } = this.getWindowSize();
+    this.renderer.setSize(width, height);
+    this.material.uniforms.iResolution.value.set(width, height, 1);
+  }
+
+  private animate() {
+    const time = (Date.now() - this.startTime) / 1000;
+    this.material.uniforms.iTime.value = time;
+    this.renderer.render(this.scene, this.camera);
+    requestAnimationFrame(() => this.animate());
+  }
+
+  public cleanup() {
+    window.removeEventListener('resize', () => this.handleResize());
+    this.renderer.dispose();
+    if (this.canvas.parentElement) {
+      this.canvas.parentElement.removeChild(this.canvas);
+    }
+  }
+}
+
+export default NoisyNebulaShader;

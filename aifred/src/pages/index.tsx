@@ -1,5 +1,10 @@
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
+import dynamic from 'next/dynamic';
+
+const NoisyNebulaShader = dynamic(() => import('../components/NoisyNebulaShader'), {
+  ssr: false
+});
 
 export default function Home() {
   const [description, setDescription] = useState("");
@@ -26,6 +31,7 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <NoisyNebulaShader />
       <main className={styles.main}>
         <h1 className={styles.title}>ZEE Workflow ++</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
