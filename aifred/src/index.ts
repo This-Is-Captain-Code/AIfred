@@ -69,6 +69,10 @@ const agent3 = {
     config: {},
     llm: model,
     _tools: [toolKit],
+    tools: [toolKit],
+    instructions: "Analyze blockchain data and provide insights",
+    generate: async (input: string) => ({ response: await executor.call({ input }) }),
+    logger: console,
     run: executor.call.bind(executor)
 } as Agent;
 
