@@ -121,7 +121,7 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description: "Write a sonnet about nature and changing seasons",
+    description: "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
     output: "A creative poem",
     agents: { agent3 },
 });
