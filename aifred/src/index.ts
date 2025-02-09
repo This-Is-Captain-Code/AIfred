@@ -17,28 +17,42 @@ import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
 
 // Create a custom LangChain tool
-const cryptoAnalysisTool = new DynamicStructuredTool({
-    name: "crypto_analysis",
-    description: "Analyzes cryptocurrency wallet activity",
+const imageGenerationTool = new DynamicStructuredTool({
+    name: "generate_image",
+    description: "Generates an image based on a description",
     schema: {
         type: "object",
         properties: {
-            address: { type: "string", description: "Wallet address to analyze" },
+            prompt: { type: "string", description: "Description of the image to generate" },
         },
-        required: ["address"],
+        required: ["prompt"],
     },
     func: async (input: unknown) => {
-        if (typeof input === 'object' && input !== null && 'address' in input && typeof (input as { address: string }).address === 'string') {
-            return `Analysis completed for address ${(input as { address: string }).address}`;
+        if (typeof input === 'object' && input !== null && 'prompt' in input && typeof (input as { prompt: string }).prompt === 'string') {
+            const openai = new ChatOpenAI({ modelName: "gpt-4-vision-preview" });
+            const response = await openai.invoke([{
+                type: "image_url",
+                image_url: {
+                    url: `data:image/jpeg;base64,${await openai.images.generate({
+                        model: "dall-e-3",
+                        prompt: (input as { prompt: string }).prompt,
+                        size: "1024x1024",
+                        quality: "standard",
+                        n: 1,
+                    }).then(res => res.data[0].url)}`
+                }
+            }]);
+            console.log("Generated image:", response);
+            return response;
         }
-        throw new Error('Invalid input: address must be a string');
+        throw new Error('Invalid input: prompt must be a string');
     },
 });
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
     const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0 });
-    const tools = [cryptoAnalysisTool];
+    const tools = [imageGenerationTool];
     
     const prompt = ChatPromptTemplate.fromMessages([
         ["system", "You are a crypto wallet analyzer. Use the tools to analyze wallets."],
