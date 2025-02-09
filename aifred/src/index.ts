@@ -1,3 +1,4 @@
+
 import {
     Agent,
     ZeeWorkflow,
@@ -6,7 +7,52 @@ import {
     TransactionsTool,
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
+import { Tool } from "langchain/tools";
+import { ChatOpenAI } from "@langchain/openai";
+import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
+import { DynamicStructuredTool } from "@langchain/core/tools";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
 import "dotenv/config";
+
+// Create a custom LangChain tool
+const cryptoAnalysisTool = new DynamicStructuredTool({
+    name: "crypto_analysis",
+    description: "Analyzes cryptocurrency wallet activity",
+    schema: {
+        type: "object",
+        properties: {
+            address: { type: "string", description: "Wallet address to analyze" },
+        },
+        required: ["address"],
+    },
+    func: async ({ address }) => {
+        // Add your analysis logic here
+        return `Analysis completed for address ${address}`;
+    },
+});
+
+// Create LangChain agent
+const createLangChainAgent = async () => {
+    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0 });
+    const tools = [cryptoAnalysisTool];
+    
+    const prompt = ChatPromptTemplate.fromMessages([
+        ["system", "You are a crypto wallet analyzer. Use the tools to analyze wallets."],
+        ["human", "{input}"],
+    ]);
+    
+    const agent = await createOpenAIFunctionsAgent({
+        llm,
+        tools,
+        prompt,
+    });
+    
+    return AgentExecutor.fromAgentAndTools({
+        agent,
+        tools,
+        verbose: true,
+    });
+};
 
 const agent1 = new Agent({
     name: "blockchain-researcher",
@@ -43,6 +89,14 @@ const zee = new ZeeWorkflow({
 });
 
 (async function main() {
+    // Create and run LangChain agent
+    const langChainAgent = await createLangChainAgent();
+    const langChainResult = await langChainAgent.invoke({
+        input: "Analyze the wallet 0x883b3527067F03fD9A581D81020b17FC0d00784F",
+    });
+    console.log("LangChain Analysis:", langChainResult);
+
+    // Run ZEE workflow
     const result = await ZeeWorkflow.run(zee);
-    console.log(result);
+    console.log("ZEE Result:", result);
 })();
