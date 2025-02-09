@@ -11,7 +11,16 @@ import { OpenAI } from "@langchain/openai";
 import "dotenv/config";
 
 // Custom LangChain FUD Generator Tool
-class LangChainFUDTool {
+class LangChainFUDTool implements Tool {
+    id = "langchain-fud";
+    _schema = {
+        type: "object",
+        properties: {
+            analysis: { type: "string" }
+        },
+        required: ["analysis"]
+    };
+    _description = "Generates FUD using LangChain analysis";
     private chain: any;
 
     constructor() {
@@ -27,7 +36,7 @@ class LangChainFUDTool {
         this.chain = prompt.pipe(llm);
     }
 
-    async execute(input: { analysis: string }): Promise<string> {
+    async _execute(input: { analysis: string }): Promise<string> {
         return this.chain.invoke(input);
     }
 }
