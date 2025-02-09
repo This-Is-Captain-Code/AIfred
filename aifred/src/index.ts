@@ -138,6 +138,11 @@ const zee = new ZeeWorkflow({
     description: "A workflow that multiplies 5 with 5",
     output: "Math analysis results",
     agents: { agent3 },
+    input: {
+        operation: "multiply",
+        num1: 5,
+        num2: 5
+    }
 });
 
 (async function main() {
