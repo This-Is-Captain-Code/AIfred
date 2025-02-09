@@ -141,7 +141,15 @@ const zee = new ZeeWorkflow({
 });
 
 (async function main() {
-    // Run ZEE workflow with all agents including LangChain
+    // First execute the langchain tool directly
+    const mathResult = await langChainTool.execute({
+        operation: "multiply",
+        num1: 5,
+        num2: 5
+    });
+    
+    // Then run the workflow
     const result = await ZeeWorkflow.run(zee);
+    console.log("Math Result:", mathResult);
     console.log("ZEE Result:", result);
 })();
