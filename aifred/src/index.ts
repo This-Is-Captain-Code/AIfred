@@ -25,9 +25,9 @@ const cryptoAnalysisTool = new DynamicStructuredTool({
         },
         required: ["address"],
     },
-    func: async (input: { address: string }): Promise<string> => {
-        // Add your analysis logic here
-        return `Analysis completed for address ${input.address}`;
+    func: async (input) => {
+        const address = (input as { address: string }).address;
+        return `Analysis completed for address ${address}`;
     },
 });
 
