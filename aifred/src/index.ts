@@ -14,7 +14,6 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import "dotenv/config";
 import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
-import { OpenAIImages } from "langchain/llms/openai";
 
 // Create a custom LangChain math tool
 const mathTool = new DynamicStructuredTool({
@@ -123,34 +122,20 @@ const langChainTool = createTool({
     },
 });
 
-const dalleTool = createTool({
-    id: "dalle-generator",
-    description: "Generates images using DALL-E",
-    schema: z.object({
-        prompt: z.string().describe("The image generation prompt")
-    }),
-    execute: async ({ prompt }) => {
-        const imageModel = new OpenAIImages();
-        const image = await imageModel.generate(prompt);
-        return image[0].url;
-    },
-});
-
 const agent3 = new Agent({
     name: "langchain-agent",
     model: {
         provider: "OPEN_AI",
         name: "gpt-4o-mini",
     },
-    description: "An agent that uses LangChain for wallet analysis",
+    description: "An agent that does mathematics",
     tools: {
         langChainAnalysis: langChainTool,
-        dalle: dalleTool,
     },
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow that generates the image of 5",
+    description: "A workflow that multiplies 5 with 5",
     output: "Math analysis results",
     agents: { agent3 },
 });
