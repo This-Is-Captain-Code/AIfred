@@ -1,26 +1,25 @@
-
-import { useState } from 'react';
-import styles from '../styles/Home.module.css';
+import { useState } from "react";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  const [description, setDescription] = useState('');
-  const [output, setOutput] = useState('');
-  const [result, setResult] = useState('');
+  const [description, setDescription] = useState("");
+  const [output, setOutput] = useState("");
+  const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description, output }),
       });
       const data = await response.json();
-      setResult(data.result || 'No result generated');
+      setResult(data.result || "No result generated");
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
     setLoading(false);
   };
@@ -28,7 +27,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>ZEE Workflow Generator</h1>
+        <h1 className={styles.title}>ZEE Workflow ++</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.field}>
             <label>Description:</label>
@@ -50,7 +49,7 @@ export default function Home() {
             />
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Generating...' : 'Generate'}
+            {loading ? "Generating..." : "Generate"}
           </button>
         </form>
         {result && (
