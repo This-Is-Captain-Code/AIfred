@@ -33,7 +33,8 @@ export default function Home() {
     <div className={styles.container}>
       <NoisyNebulaShader />
       <main className={styles.main}>
-        <h1 className={styles.title}>AIfred - powered by ZEE Workflow ++</h1>
+        <h1 className={styles.title}>AIfred</h1>
+        <h2 className={styles.subtitle}>powered by ZEE Workflow ++</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.field}>
             <label>Description:</label>
