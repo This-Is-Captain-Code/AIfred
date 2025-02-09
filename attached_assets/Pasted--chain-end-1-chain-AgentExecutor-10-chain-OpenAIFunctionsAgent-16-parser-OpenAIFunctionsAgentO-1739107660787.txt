@@ -1,0 +1,87 @@
+[chain/end] [1:chain:AgentExecutor > 10:chain:OpenAIFunctionsAgent > 16:parser:OpenAIFunctionsAgentOutputParser] [0ms] Exiting Chain run with output: {
+  "returnValues": {
+    "output": "In Winter's grasp, the world is hushed and white,\nA crystal kingdom, silent and serene.\nYet, beneath the snow, life sleeps in the night,\nAwaiting Spring's return to the scene.\n\nWith Spring, life awakens, bright and new,\nBlossoms bloom, birds sing, the world is reborn.\nColours vibrant, a dazzling view,\nA symphony of nature, a new dawn.\n\nThen Summer arrives with its golden light,\nDays of warmth, nights under a starry dome.\nFields of green under the sun so bright,\nNature in its abundance, a perfect home.\n\nAutumn ends the cycle, leaves fall down,\nA cascade of reds, yellows, and brown.\nThe world prepares again for Winter's crown,\nIn nature's beauty, we are all hometown."
+  },
+  "log": "In Winter's grasp, the world is hushed and white,\nA crystal kingdom, silent and serene.\nYet, beneath the snow, life sleeps in the night,\nAwaiting Spring's return to the scene.\n\nWith Spring, life awakens, bright and new,\nBlossoms bloom, birds sing, the world is reborn.\nColours vibrant, a dazzling view,\nA symphony of nature, a new dawn.\n\nThen Summer arrives with its golden light,\nDays of warmth, nights under a starry dome.\nFields of green under the sun so bright,\nNature in its abundance, a perfect home.\n\nAutumn ends the cycle, leaves fall down,\nA cascade of reds, yellows, and brown.\nThe world prepares again for Winter's crown,\nIn nature's beauty, we are all hometown."
+}
+[chain/end] [1:chain:AgentExecutor > 10:chain:OpenAIFunctionsAgent] [8.73s] Exiting Chain run with output: {
+  "returnValues": {
+    "output": "In Winter's grasp, the world is hushed and white,\nA crystal kingdom, silent and serene.\nYet, beneath the snow, life sleeps in the night,\nAwaiting Spring's return to the scene.\n\nWith Spring, life awakens, bright and new,\nBlossoms bloom, birds sing, the world is reborn.\nColours vibrant, a dazzling view,\nA symphony of nature, a new dawn.\n\nThen Summer arrives with its golden light,\nDays of warmth, nights under a starry dome.\nFields of green under the sun so bright,\nNature in its abundance, a perfect home.\n\nAutumn ends the cycle, leaves fall down,\nA cascade of reds, yellows, and brown.\nThe world prepares again for Winter's crown,\nIn nature's beauty, we are all hometown."
+  },
+  "log": "In Winter's grasp, the world is hushed and white,\nA crystal kingdom, silent and serene.\nYet, beneath the snow, life sleeps in the night,\nAwaiting Spring's return to the scene.\n\nWith Spring, life awakens, bright and new,\nBlossoms bloom, birds sing, the world is reborn.\nColours vibrant, a dazzling view,\nA symphony of nature, a new dawn.\n\nThen Summer arrives with its golden light,\nDays of warmth, nights under a starry dome.\nFields of green under the sun so bright,\nNature in its abundance, a perfect home.\n\nAutumn ends the cycle, leaves fall down,\nA cascade of reds, yellows, and brown.\nThe world prepares again for Winter's crown,\nIn nature's beauty, we are all hometown."
+}
+[chain/end] [1:chain:AgentExecutor] [10.40s] Exiting Chain run with output: {
+  "input": "Write a sonnet about the beauty of changing seasons in nature",
+  "output": "In Winter's grasp, the world is hushed and white,\nA crystal kingdom, silent and serene.\nYet, beneath the snow, life sleeps in the night,\nAwaiting Spring's return to the scene.\n\nWith Spring, life awakens, bright and new,\nBlossoms bloom, birds sing, the world is reborn.\nColours vibrant, a dazzling view,\nA symphony of nature, a new dawn.\n\nThen Summer arrives with its golden light,\nDays of warmth, nights under a starry dome.\nFields of green under the sun so bright,\nNature in its abundance, a perfect home.\n\nAutumn ends the cycle, leaves fall down,\nA cascade of reds, yellows, and brown.\nThe world prepares again for Winter's crown,\nIn nature's beauty, we are all hometown."
+}
+router (5) 
+  ⊢ agent3  Working on: In Winter's grasp, the world is hushed and white,
+A crystal kingdom, silent and serene.
+Yet, beneath the snow, life sleeps in the night,
+Awaiting Spring's return to the scene.
+
+With Spring, life awakens, bright and new,
+Blossoms bloom, birds sing, the world is reborn.
+Colours vibrant, a dazzling view,
+A symphony of nature, a new dawn.
+
+Then Summer arrives with its golden light,
+Days of warmth, nights under a starry dome.
+Fields of green under the sun so bright,
+Nature in its abundance, a perfect home.
+
+Autumn ends the cycle, leaves fall down,
+A cascade of reds, yellows, and brown.
+The world prepares again for Winter's crown,
+In nature's beauty, we are all hometown.
+router (7) Looking for next task...
+Router result {
+  type: 'next_task',
+  value: {
+    task: '',
+    reasoning: 'The sonnet has been completed with three sections: the first quatrain, the second quatrain, and the final couplet. Therefore, the workflow is complete.'
+  }
+}
+router (7) Finished
+ZEE Result: {
+  agent: 'router',
+  messages: [
+    {
+      role: 'user',
+      content: 'Here is a description of my workflow: Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.'
+    },
+    {
+      role: 'user',
+      content: 'Draft the first quatrain of the sonnet focusing on the beauty of spring and summer.'
+    },
+    {
+      role: 'assistant',
+      content: "In the grand theatre of the year's flow,\n" +
+        "Four dancers take the stage in nature's play,\n" +
+        'Each with a unique grace and glow,\n' +
+        'To weave a ballet of night and day.'
+    },
+    {
+      role: 'user',
+      content: 'Draft the second quatrain of the sonnet focusing on the beauty of autumn and winter.'
+    },
+    {
+      role: 'assistant',
+      content: 'Autumn whispers with its golden leaves,\n' +
+        'In amber tones, a fleeting dance of grace.\n' +
+        'Winter blankets all that nature weaves,\n' +
+        'A quiet pause, a tranquil, restful space.'
+    },
+    {
+      role: 'user',
+      content: 'Draft the final couplet of the sonnet to encapsulate the theme of the beauty of changing seasons.'
+    },
+    {
+      role: 'assistant',
+      content: "In nature's beauty, we are all hometown,\n" +
+        'As seasons dance, our hearts forever drown.'
+    }
+  ],
+  status: 'finished',
+  children: []
+}
