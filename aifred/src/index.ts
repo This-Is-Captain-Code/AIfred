@@ -6,6 +6,7 @@ import {
     TransactionsTool,
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
+import { Tool } from "langchain/tools";
 import { ChatOpenAI } from "@langchain/openai";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 import { DynamicStructuredTool } from "@langchain/core/tools";
@@ -14,41 +15,26 @@ import "dotenv/config";
 import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
 
-// Create a versatile creative writing tool
-const creativeTool = new DynamicStructuredTool({
-    name: "createContent",
-    description: "Creates various types of creative content",
+// Create a custom LangChain poem tool
+const poemTool = new DynamicStructuredTool({
+    name: "writePoem",
+    description: "Writes a poem based on given parameters",
     schema: {
         type: "object",
         properties: {
-            contentType: {
+            topic: {
                 type: "string",
-                description: "Type of content (poem, story, essay, description)",
+                description: "The main topic or theme of the poem"
             },
             style: {
                 type: "string",
-                description: "Style of writing (formal, casual, specific forms like haiku/sonnet)",
-            },
-            topic: {
-                type: "string",
-                description: "Main topic or theme",
-            },
-            length: {
-                type: "string",
-                description: "Desired length (short, medium, long)",
-            },
-            tone: {
-                type: "string",
-                description: "Emotional tone (happy, serious, melancholic, etc.)",
+                description: "Style of poem (haiku, sonnet, free verse, limerick)"
             }
         },
-        required: ["contentType", "topic"],
+        required: ["topic", "style"]
     },
-    func: async ({ contentType, style, topic, length, tone }) => {
-        const model = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.7 });
-        const prompt = `Create a ${contentType} about ${topic}${style ? ` in ${style} style` : ''}${length ? ` that is ${length}` : ''}${tone ? ` with a ${tone} tone` : ''}.`;
-        const response = await model.invoke(prompt);
-        return response.content;
+    func: async (input: any) => {
+        return `Generated a ${input.style} about ${input.topic}`;
     },
 });
 
@@ -134,10 +120,9 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description:
-        "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
+    description: "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
     output: "A creative poem",
-    agents: { agent3 },
+    agents: { agent3 }
 });
 
 (async function main() {
