@@ -54,7 +54,7 @@ const toolKit = new ChainTool({
     }
 });
 
-const executor = await initializeAgentExecutorWithOptions(
+const agent3 = await initializeAgentExecutorWithOptions(
     [toolKit],
     model,
     {
@@ -62,19 +62,6 @@ const executor = await initializeAgentExecutorWithOptions(
         verbose: true
     }
 );
-
-const agent3 = {
-    name: "executor-agent",
-    description: "An agent that executes blockchain analysis",
-    config: {},
-    llm: model,
-    _tools: [toolKit],
-    tools: [toolKit],
-    instructions: "Analyze blockchain data and provide insights",
-    generate: async (input: string) => ({ response: await executor.call({ input }) }),
-    logger: console,
-    run: executor.call.bind(executor)
-} as Agent;
 
 const zee = new ZeeWorkflow({
     description:
