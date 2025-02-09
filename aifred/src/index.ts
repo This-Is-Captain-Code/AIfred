@@ -15,51 +15,38 @@ import "dotenv/config";
 import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
 
-// Create a custom LangChain math tool
-const mathTool = new DynamicStructuredTool({
-    name: "calculator",
-    description: "Performs mathematical calculations",
+// Create a custom LangChain poem tool
+const poemTool = new DynamicStructuredTool({
+    name: "writePoem",
+    description: "Writes a poem based on given parameters",
     schema: {
         type: "object",
         properties: {
-            operation: {
+            topic: {
                 type: "string",
-                description:
-                    "Mathematical operation (add, subtract, multiply, divide, power)",
+                description: "The main topic or theme of the poem"
             },
-            num1: { type: "number", description: "First number" },
-            num2: { type: "number", description: "Second number" },
+            style: {
+                type: "string",
+                description: "Style of poem (haiku, sonnet, free verse, limerick)"
+            }
         },
-        required: ["operation", "num1", "num2"],
+        required: ["topic", "style"]
     },
     func: async (input: any) => {
-        const { operation, num1, num2 } = input;
-        switch (operation.toLowerCase()) {
-            case "add":
-                return num1 + num2;
-            case "subtract":
-                return num1 - num2;
-            case "multiply":
-                return num1 * num2;
-            case "divide":
-                return num2 !== 0 ? num1 / num2 : "Cannot divide by zero";
-            case "power":
-                return Math.pow(num1, num2);
-            default:
-                return "Invalid operation";
-        }
+        return `Generated a ${input.style} about ${input.topic}`;
     },
 });
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
-    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0 });
-    const tools = [mathTool];
+    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.7 });
+    const tools = [poemTool];
 
     const prompt = ChatPromptTemplate.fromMessages([
         [
             "system",
-            "You are a math assistant. Use the calculator tool to perform mathematical operations.",
+            "You are a creative poet. Use the writePoem tool to create beautiful poems based on given topics and styles.",
         ],
         ["human", "{input}"],
         ["human", "{agent_scratchpad}"],
@@ -106,17 +93,16 @@ const agent2 = new Agent({
 });
 
 const langChainTool = createTool({
-    id: "math-calculator",
-    description: "Performs mathematical calculations",
+    id: "poem-writer",
+    description: "Creates poems in various styles",
     schema: z.object({
-        operation: z.string().describe("Mathematical operation"),
-        num1: z.number().describe("First number"),
-        num2: z.number().describe("Second number"),
+        topic: z.string().describe("Topic or theme for the poem"),
+        style: z.string().describe("Style of poem to generate"),
     }),
     execute: async (params) => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: `Perform ${params.operation} on ${params.num1} and ${params.num2}`,
+            input: `Write a ${params.style} poem about ${params.topic}`,
         });
         return result.output;
     },
@@ -128,14 +114,14 @@ const agent3 = new Agent({
         provider: "OPEN_AI",
         name: "gpt-4o-mini",
     },
-    description: "An agent that does mathematics",
+    description: "An agent that writes creative poems",
     tools: {
         langChainAnalysis: langChainTool,
     },
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow that multiplies 5 with 5",
+    description: "A workflow that generates creative poems",
     output: "Math analysis results",
     agents: { agent3 },
 });
