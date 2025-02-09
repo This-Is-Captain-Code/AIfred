@@ -123,15 +123,9 @@ const zee = new ZeeWorkflow({
     description: "Write a poem. The style should be sonnet and the topic should be about the beauty of changing seasons in nature.",
     output: "A creative poem",
     agents: { agent3 },
-    onAgentComplete: async (result) => {
-        if (result.agent === "agent3") {
-            return { output: result.output };
-        }
-        return result;
-    }
 });
 
 (async function main() {
     const result = await ZeeWorkflow.run(zee);
-    console.log("Final Poem:", result.output);
+    console.log("ZEE Result:", result);
 })();
