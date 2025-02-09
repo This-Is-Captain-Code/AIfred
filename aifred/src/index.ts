@@ -11,16 +11,13 @@ import { OpenAI } from "@langchain/openai";
 import { Tool } from "@langchain/core/tools";
 import "dotenv/config";
 
-// Custom LangChain FUD Generator Tool
 class LangChainFUDTool extends Tool {
     private chain: any;
+    name = "langchain-fud";
+    description = "Generates FUD using LangChain analysis";
 
     constructor() {
-        super({
-            name: "langchain-fud",
-            description: "Generates FUD using LangChain analysis",
-            _execute: async (input: string) => this._call(input),
-        });
+        super();
 
         const llm = new OpenAI({
             openAIApiKey: process.env.OPENAI_API_KEY,
@@ -34,30 +31,10 @@ class LangChainFUDTool extends Tool {
         this.chain = prompt.pipe(llm);
     }
 
-    /** @ignore */
-    protected async _call(input: string): Promise<string> {
+    async _call(input: string): Promise<string> {
         return this.chain.invoke({ input });
     }
 }
-
-// Create a custom tool instance that implements the required interface
-const langchainFUDTool = new Tool({
-    name: "langchain-fud",
-    description: "Generates FUD using LangChain analysis",
-    func: async (input: string) => {
-        const llm = new OpenAI({
-            openAIApiKey: process.env.OPENAI_API_KEY,
-            temperature: 0.9,
-        });
-
-        const prompt = PromptTemplate.fromTemplate(
-            "Generate intense FUD about this blockchain analysis: {input}",
-        );
-
-        const chain = prompt.pipe(llm);
-        return chain.invoke({ input });
-    },
-});
 
 // Original Agents
 const agent1 = new Agent({
@@ -96,7 +73,7 @@ const agent3 = new Agent({
     },
     description: "Generates advanced FUD using LangChain analysis",
     tools: {
-        langchainFUD: langchainFUDTool,
+        langchainFUD: new LangChainFUDTool(),
     },
 });
 
