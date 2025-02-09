@@ -7,7 +7,7 @@ import {
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
 import { Tool } from "langchain/tools";
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenRouter } from "@langchain/openrouter";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
@@ -40,7 +40,11 @@ const poemTool = new DynamicStructuredTool({
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
-    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.7 });
+    const llm = new ChatOpenRouter({
+        modelName: "openai/gpt-4",
+        temperature: 0.7,
+        apiKey: process.env.OPENROUTER_API_KEY
+    });
     const tools = [poemTool];
 
     const prompt = ChatPromptTemplate.fromMessages([
