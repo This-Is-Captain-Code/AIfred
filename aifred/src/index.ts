@@ -25,9 +25,11 @@ const cryptoAnalysisTool = new DynamicStructuredTool({
         },
         required: ["address"],
     },
-    func: async (input) => {
-        const address = (input as { address: string }).address;
-        return `Analysis completed for address ${address}`;
+    func: async (input: unknown) => {
+        if (typeof input === 'object' && input !== null && 'address' in input && typeof (input as { address: string }).address === 'string') {
+            return `Analysis completed for address ${(input as { address: string }).address}`;
+        }
+        throw new Error('Invalid input: address must be a string');
     },
 });
 
