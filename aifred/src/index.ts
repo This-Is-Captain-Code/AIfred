@@ -123,20 +123,13 @@ const langChainTool = createTool({
     },
 });
 
-const dalleTool = new DynamicStructuredTool({
-    name: "dalle-generator",
+const dalleTool = createTool({
+    id: "dalle-generator",
     description: "Generates images using DALL-E",
-    schema: {
-        type: "object",
-        properties: {
-            prompt: {
-                type: "string",
-                description: "The image generation prompt",
-            },
-        },
-        required: ["prompt"],
-    },
-    func: async ({ prompt }) => {
+    schema: z.object({
+        prompt: z.string().describe("The image generation prompt")
+    }),
+    execute: async ({ prompt }) => {
         const imageModel = new OpenAIImages();
         const image = await imageModel.generate(prompt);
         return image[0].url;
