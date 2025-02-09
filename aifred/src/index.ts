@@ -19,7 +19,11 @@ class LangChainFUDTool extends Tool {
     private chain: any;
 
     constructor() {
-        super();
+        super({
+            name: "langchain-fud",
+            description: "Generates FUD using LangChain analysis",
+        });
+
         const llm = new OpenAI({
             openAIApiKey: process.env.OPENAI_API_KEY,
             temperature: 0.9,
@@ -32,7 +36,7 @@ class LangChainFUDTool extends Tool {
         this.chain = prompt.pipe(llm);
     }
 
-    async _call(input: string): Promise<string> {
+    protected async _call(input: string): Promise<string> {
         return this.chain.invoke({ input });
     }
 }
