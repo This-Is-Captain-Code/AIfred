@@ -99,10 +99,10 @@ const langChainTool = createTool({
         topic: z.string().describe("Topic or theme for the poem"),
         style: z.string().describe("Style of poem to generate"),
     }),
-    execute: async (params) => {
+    execute: async () => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: `Write a ${params.style} poem about ${params.topic}`,
+            input: "Write a sonnet about the beauty of changing seasons in nature",
         });
         return result.output;
     },
