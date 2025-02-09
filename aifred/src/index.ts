@@ -55,14 +55,14 @@ const creativeTool = new DynamicStructuredTool({
 // Create LangChain agent
 const createLangChainAgent = async () => {
     const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.7 });
-    const tools = [poemTool];
+    const tools = [creativeTool];
 
     const prompt = ChatPromptTemplate.fromMessages([
         [
             "system",
-            "You are a creative poet. Your task is to write beautiful poems using the writePoem tool.",
+            "You are a creative writer. Your task is to create various types of content using the createContent tool.",
         ],
-        ["human", "Write a poem based on this request: {input}"],
+        ["human", "Create content based on this request: {input}"],
         ["human", "{agent_scratchpad}"],
     ]);
 
@@ -107,15 +107,21 @@ const agent2 = new Agent({
 });
 
 const langChainTool = createTool({
-    id: "poem-writer",
-    description: "Creates poems in various styles",
+    id: "content-creator",
+    description: "Creates various types of creative content",
     schema: z.object({
-        prompt: z.string().describe("The complete poem request"),
+        prompt: z.string().describe("The complete content creation request"),
     }),
     execute: async () => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: "Write a sonnet about the beauty of changing seasons in nature",
+            input: {
+                contentType: "poem",
+                style: "sonnet",
+                topic: "the beauty of changing seasons in nature",
+                length: "medium",
+                tone: "contemplative"
+            }
         });
         return result.output;
     },
