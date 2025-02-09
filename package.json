@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "next dev -p 3000 -H 0.0.0.0"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -14,15 +13,8 @@
     "@covalenthq/ai-agent-sdk": "^0.2.2",
     "@covalenthq/client-sdk": "^2.2.3",
     "@langchain/openai": "^0.4.3",
-    "@tailwindcss/forms": "^0.5.10",
-    "autoprefixer": "^10.4.20",
     "dotenv": "^16.4.7",
     "langchain": "^0.3.15",
-    "next": "^15.1.6",
-    "postcss": "^8.5.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "zod": "^3.24.1"
