@@ -1,0 +1,136 @@
+  ⊢ agent3  Paused
+[chain/start] [1:chain:AgentExecutor] Entering Chain run with input: {
+  "input": "Perform undefined on undefined and undefined"
+}
+[chain/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent] Entering Chain run with input: {
+  "input": "Perform undefined on undefined and undefined",
+  "steps": []
+}
+[chain/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 3:chain:RunnableAssign] Entering Chain run with input: {
+  "input": ""
+}
+[chain/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 3:chain:RunnableAssign > 4:chain:RunnableMap] Entering Chain run with input: {
+  "input": ""
+}
+[chain/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 3:chain:RunnableAssign > 4:chain:RunnableMap > 5:chain:RunnableLambda] Entering Chain run with input: {
+  "input": ""
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 3:chain:RunnableAssign > 4:chain:RunnableMap > 5:chain:RunnableLambda] [1ms] Exiting Chain run with output: {
+  "output": []
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 3:chain:RunnableAssign > 4:chain:RunnableMap] [1ms] Exiting Chain run with output: {
+  "agent_scratchpad": []
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 3:chain:RunnableAssign] [2ms] Exiting Chain run with output: {
+  "input": "Perform undefined on undefined and undefined",
+  "steps": [],
+  "agent_scratchpad": []
+}
+[chain/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 6:prompt:ChatPromptTemplate] Entering Chain run with input: {
+  "input": "Perform undefined on undefined and undefined",
+  "steps": [],
+  "agent_scratchpad": []
+}
+[chain/end] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 6:prompt:ChatPromptTemplate] [0ms] Exiting Chain run with output: {
+  "lc": 1,
+  "type": "constructor",
+  "id": [
+    "langchain_core",
+    "prompt_values",
+    "ChatPromptValue"
+  ],
+  "kwargs": {
+    "messages": [
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "SystemMessage"
+        ],
+        "kwargs": {
+          "content": "You are a math assistant. Use the calculator tool to perform mathematical operations.",
+          "additional_kwargs": {},
+          "response_metadata": {}
+        }
+      },
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "HumanMessage"
+        ],
+        "kwargs": {
+          "content": "Perform undefined on undefined and undefined",
+          "additional_kwargs": {},
+          "response_metadata": {}
+        }
+      },
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "HumanMessage"
+        ],
+        "kwargs": {
+          "content": "[]",
+          "additional_kwargs": {},
+          "response_metadata": {}
+        }
+      }
+    ]
+  }
+}
+[llm/start] [1:chain:AgentExecutor > 2:chain:OpenAIFunctionsAgent > 7:llm:ChatOpenAI] Entering LLM run with input: {
+  "messages": [
+    [
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "SystemMessage"
+        ],
+        "kwargs": {
+          "content": "You are a math assistant. Use the calculator tool to perform mathematical operations.",
+          "additional_kwargs": {},
+          "response_metadata": {}
+        }
+      },
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "HumanMessage"
+        ],
+        "kwargs": {
+          "content": "Perform undefined on undefined and undefined",
+          "additional_kwargs": {},
+          "response_metadata": {}
+        }
+      },
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "HumanMessage"
+        ],
+        "kwargs": {
+          "content": "[]",
+          "additional_kwargs": {},
+          "response_metadata": {}
+        }
+      }
+    ]
+  ]
+}
