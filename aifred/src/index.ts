@@ -16,50 +16,42 @@ import { createTool } from "@covalenthq/ai-agent-sdk";
 import { z } from "zod";
 
 // Create a custom LangChain math tool
-const mathTool = new DynamicStructuredTool({
-    name: "calculator",
-    description: "Performs mathematical calculations",
+const poemTool = new DynamicStructuredTool({
+    name: "poem_writer",
+    description: "Writes poems based on given parameters",
     schema: {
         type: "object",
         properties: {
-            operation: {
+            topic: {
                 type: "string",
-                description:
-                    "Mathematical operation (add, subtract, multiply, divide, power)",
+                description: "The main topic or theme of the poem",
             },
-            num1: { type: "number", description: "First number" },
-            num2: { type: "number", description: "Second number" },
+            style: {
+                type: "string",
+                description: "Style of poem (haiku, sonnet, free verse, limerick)",
+            },
+            mood: {
+                type: "string",
+                description: "The mood or emotion of the poem",
+            },
         },
-        required: ["operation", "num1", "num2"],
+        required: ["topic", "style", "mood"],
     },
     func: async (input: any) => {
-        const { operation, num1, num2 } = input;
-        switch (operation.toLowerCase()) {
-            case "add":
-                return num1 + num2;
-            case "subtract":
-                return num1 - num2;
-            case "multiply":
-                return num1 * num2;
-            case "divide":
-                return num2 !== 0 ? num1 / num2 : "Cannot divide by zero";
-            case "power":
-                return Math.pow(num1, num2);
-            default:
-                return "Invalid operation";
-        }
+        const { topic, style, mood } = input;
+        return `Here is a ${style} about ${topic} with a ${mood} mood:\n\n[Generated poem will be created by GPT-4]`;
     },
 });
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
-    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0 });
-    const tools = [mathTool];
+    const llm = new ChatOpenAI({ modelName: "gpt-4", temperature: 0.8 });
+    const tools = [poemTool];
 
     const prompt = ChatPromptTemplate.fromMessages([
         [
             "system",
-            "You are a math assistant. Use the calculator tool to perform mathematical operations.",
+            "You are a creative poetry assistant. Use the poem_writer tool to create beautiful poems based on user requests.",
         ],
         ["human", "{input}"],
         ["human", "{agent_scratchpad}"],
@@ -106,17 +98,17 @@ const agent2 = new Agent({
 });
 
 const langChainTool = createTool({
-    id: "math-calculator",
-    description: "Performs mathematical calculations",
+    id: "poem-writer",
+    description: "Creates poems based on given parameters",
     schema: z.object({
-        operation: z.string().describe("Mathematical operation"),
-        num1: z.number().describe("First number"),
-        num2: z.number().describe("Second number"),
+        topic: z.string().describe("Topic or theme of the poem"),
+        style: z.string().describe("Style of poem"),
+        mood: z.string().describe("Mood or emotion of the poem"),
     }),
     execute: async (params) => {
         const langChainAgent = await createLangChainAgent();
         const result = await langChainAgent.invoke({
-            input: `Perform ${params.operation} on ${params.num1} and ${params.num2}`,
+            input: `Write a ${params.style} poem about ${params.topic} with a ${params.mood} mood`,
         });
         return result.output;
     },
@@ -135,8 +127,8 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow that multiplies 5 with 5",
-    output: "Math analysis results",
+    description: "A workflow that creates a haiku about nature",
+    output: "Poetry creation results",
     agents: { agent3 },
 });
 
