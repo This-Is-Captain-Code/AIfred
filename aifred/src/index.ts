@@ -135,13 +135,33 @@ const agent3 = new Agent({
 });
 
 const zee = new ZeeWorkflow({
-    description: "A workflow that multiplies 5 with 5",
-    output: "Math analysis results",
-    agents: { agent3 },
+    description: "A workflow that analyzes wallet and performs calculations",
+    output: "Combined analysis results",
+    agents: { agent1, agent2, agent3 },
+    steps: [
+        {
+            agent: "blockchain-researcher",
+            input: "Analyze the wallet balance and activities",
+            dependencies: []
+        },
+        {
+            agent: "prateek-panwar",
+            input: "Review the analysis and provide FUD insights",
+            dependencies: ["blockchain-researcher"]
+        },
+        {
+            agent: "langchain-agent",
+            input: {
+                operation: "multiply",
+                num1: 5,
+                num2: 5
+            },
+            dependencies: ["prateek-panwar"]
+        }
+    ]
 });
 
 (async function main() {
-    // Run ZEE workflow with all agents including LangChain
     const result = await ZeeWorkflow.run(zee);
-    console.log("ZEE Result:", result);
+    console.log("Workflow Result:", result);
 })();
