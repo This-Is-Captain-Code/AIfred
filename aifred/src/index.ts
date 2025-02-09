@@ -7,7 +7,7 @@ import {
     HistoricalTokenPriceTool,
 } from "@covalenthq/ai-agent-sdk";
 import { Tool } from "langchain/tools";
-import { ChatOpenRouter } from "@langchain/openrouter";
+import { OpenAI } from "langchain/llms/openai";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
@@ -40,10 +40,17 @@ const poemTool = new DynamicStructuredTool({
 
 // Create LangChain agent
 const createLangChainAgent = async () => {
-    const llm = new ChatOpenRouter({
+    const llm = new OpenAI({
         modelName: "openai/gpt-4",
         temperature: 0.7,
-        apiKey: process.env.OPENROUTER_API_KEY
+        configuration: {
+            baseURL: "https://openrouter.ai/api/v1",
+            apiKey: process.env.OPENROUTER_API_KEY,
+            defaultHeaders: {
+                "HTTP-Referer": "https://replit.com",
+                "X-Title": "Replit AIfred"
+            }
+        }
     });
     const tools = [poemTool];
 
