@@ -60,51 +60,61 @@ class NoisyNebulaRenderer {
         uniform vec3 iResolution;
         uniform float iTime;
 
-        const vec3 COLOR = vec3(0.2, 0.2, 0.2);
-        const vec3 BG = vec3(0.0, 0.0, 0.0);
-        const float ZOOM = 3.0;
-        const int OCTAVES = 4;
-        const float INTENSITY = 2.0;
+        #define scale 90.
+        #define thickness 0.0
+        #define lengt 0.13
+        #define layers 15.
+        #define time iTime*3.
 
-        float random(vec2 st) {
-          return fract(sin(dot(st.xy, vec2(12.9818, 79.279))) * 43758.5453123);
+        vec2 hash12(float p) {
+          return fract(vec2(sin(p * 591.32), cos(p * 391.32)));
         }
 
-        vec2 random2(vec2 st) {
-          st = vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)));
-          return -1.0 + 2.0 * fract(sin(st) * 7.);
+        float hash21(in vec2 n) { 
+          return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
         }
 
-        float noise(vec2 st) {
-          vec2 i = floor(st);
-          vec2 f = fract(st);
-          vec2 u = f * f * (3.0 - 2.0 * f);
-          return mix(
-            mix(dot(random2(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
-                dot(random2(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), u.x),
-            mix(dot(random2(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
-                dot(random2(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), u.x), u.y);
+        vec2 hash22(in vec2 p) {
+          p = vec2(dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)));
+          return fract(sin(p)*43758.5453);
         }
 
-        float fbm(vec2 coord) {
-          float value = 0.0;
-          float scale = 0.2;
-          for (int i = 0; i < OCTAVES; i++) {
-            value += noise(coord) * scale;
-            coord *= 2.0;
-            scale *= 0.5;
-          }
-          return value + 0.2;
+        mat2 makem2(in float theta) {
+          float c = cos(theta);
+          float s = sin(theta);
+          return mat2(c,-s,s,c);
+        }
+
+        float field1(in vec2 p) {
+          vec2 n = floor(p)-0.5;
+          vec2 f = fract(p)-0.5;
+          vec2 o = hash22(n)*.35;
+          vec2 r = - f - o;
+          r *= makem2(time+hash21(n)*3.14);
+          
+          float d = 1.0-smoothstep(thickness,thickness+0.09,abs(r.x));
+          d *= 1.-smoothstep(lengt,lengt+0.02,abs(r.y));
+          
+          float d2 = 1.0-smoothstep(thickness,thickness+0.09,abs(r.y));
+          d2 *= 1.-smoothstep(lengt,lengt+0.02,abs(r.x));
+          
+          return max(d,d2);
         }
 
         void main() {
           vec2 fragCoord = vUv * iResolution.xy;
-          vec2 st = fragCoord.xy / iResolution.xy;
-          st *= iResolution.xy / iResolution.y;
-          vec2 pos = vec2(st * ZOOM);
-          vec2 motion = vec2(fbm(pos + vec2(iTime * -0.5, iTime * -0.3)));
-          float final = fbm(pos + motion) * INTENSITY;
-          gl_FragColor = vec4(mix(BG, COLOR, final), 1.0);
+          vec2 p = fragCoord.xy / iResolution.xy-0.5;
+          p.x *= iResolution.x/iResolution.y;
+          
+          float mul = (iResolution.x+iResolution.y)/scale;
+          
+          vec3 col = vec3(0);
+          for (float i=0.;i <layers;i++) {
+            vec2 ds = hash12(i*2.5)*.20;
+            col = max(col,field1((p+ds)*mul)*(sin(ds.x*5100. + vec3(1.,2.,3.5))*.4+.6));
+          }
+          
+          gl_FragColor = vec4(col,1.0);
         }
       `,
       uniforms: {
