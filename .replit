@@ -1,3 +1,18 @@
 modules = ["nodejs-20"]
 [nix]
 channel = "stable-24_05"
+
+[workflows]
+runButton = "Next.js Dev"
+
+[[workflows.workflow]]
+name = "Next.js Dev"
+author = 9443010
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd aifred && npm run dev"
+
+[[ports]]
+localPort = 3001
+externalPort = 80
